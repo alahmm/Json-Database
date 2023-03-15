@@ -32,7 +32,7 @@ public class Main {
                     output.writeUTF(msg); // resend it to the client
                     System.out.println("Sent: A record # 12 was sent!");
                     return;
-                    
+
                 }
 
 
