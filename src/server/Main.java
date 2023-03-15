@@ -10,51 +10,36 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Main {
+    private static final String address = "127.0.0.1";
+    private static final int port = 34522;
 
     public static void main(String[] args) {
-        String[] listOfData = new String[100];
-        Scanner scanner = new Scanner(System.in);
-        scanner.useDelimiter("\\n");
-        String msg;
-        while(true) {
-            msg = scanner.next();
-            String[] listOfMsg = msg.split("\\s");
-            if (msg.equals("exit")) {
-                return;
+        System.out.println("Server started!");
+        try (ServerSocket server = new ServerSocket(port, 50, InetAddress.getByName(address));) {
+            while (true) {
+                try (
+                        Socket socket = server.accept(); // accept a new client
+                        DataInputStream input = new DataInputStream(socket.getInputStream());
+                        DataOutputStream output = new DataOutputStream(socket.getOutputStream())
+                ) {
+                    String msgnew = input.readUTF();
+                    System.out.println("Received: Give me a record # 12");
 
-            } else if (listOfMsg[0].equals("get")) {
-                int index = Integer.parseInt(msg.split("\\s")[1]);
-
-                if (index < 1 || index > 100 || listOfData[index - 1] == null) {
-                    System.out.println("ERROR");
-                } else {
-                    System.out.println(listOfData[index - 1]);
-
+                    /**
+                     * to accept one message
+                     */
+                    String msg = input.readUTF(); // read a message from the client
+                    output.writeUTF(msg); // resend it to the client
+                    System.out.println("Sent: A record # 12 was sent!");
+                    return;
+                    
                 }
 
-            } else if (listOfMsg[0].equals("delete")) {
-                int index = Integer.parseInt(listOfMsg[1]);
-                if (index < 1 || index > 100 ) {
-                    System.out.println("ERROR");
-                } else {
-                    listOfData[index - 1] = null;
-                    System.out.println("OK");
-                }
-            } else if (listOfMsg[0].equals("set")) {
-                int index = Integer.parseInt(listOfMsg[1]);
-                if (index < 1 || index > 100 ) {
-                    System.out.println("ERROR");
-                } else {
-                    listOfData[index - 1] = "";
-                    for (int i = 2; i < listOfMsg.length; i++) {
-                        listOfData[index - 1] += listOfMsg[i] + " ";
-                    }
-                    System.out.println("OK");
 
-                }
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
     }
 }
 
