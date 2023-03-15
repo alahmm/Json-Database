@@ -14,7 +14,7 @@ public class Main {
     private static final int port = 34522;
 
     public static void main(String[] args) {
-        String[] database = new String[100];
+        String[] listOfData = new String[100];
         try (ServerSocket server = new ServerSocket(port, 50, InetAddress.getByName(address));) {
             while (true) {
                 try (
@@ -22,76 +22,82 @@ public class Main {
                         DataInputStream input = new DataInputStream(socket.getInputStream());
                         DataOutputStream output = new DataOutputStream(socket.getOutputStream())
                 ) {
-                    String msg = input.readUTF(); // read a message from the client
-                    String[] listOfMsg = msg.split("\\s");
-                    if (msg.equals("exit")) {
-                        return;
+                    while (true) {
+                        String msg = input.readUTF(); // read a message from the client
+                        String[] listOfMsg = msg.split("\\s");
+                        if (msg.equals("exit")) {
+                            return;
 
-                    } else if (msg.split("\\s")[0].equals("get")) {
-                        int index = Integer.parseInt(msg.split("\\s")[1]);
+                        } else if (listOfMsg[0].equals("get")) {
+                            int index = Integer.parseInt(msg.split("\\s")[1]);
 
-                        if (index < 1 || index > 100 ) {
-                            output.writeUTF("ERROR");
-                        } else {
-                            List<database> results = deserializer();
-
-                            boolean isId = false;
-                            for (database object : results
-                            ) {
-                                if (object.getIndex() == index - 1) {
-                                    isId = true;
-                                    output.writeUTF(object.getText());
-                                }
-                            }
-                            if(!isId)
-                            {
+                            if (index < 1 || index > 100 || listOfData[index - 1] == null) {
                                 output.writeUTF("ERROR");
-                            }
-                        }
+                            } else {
+                                output.writeUTF(listOfData[index - 1]);
 
-                    } else if (msg.split("\\s")[0].equals("delete")) {
-                        int index = Integer.parseInt(msg.split("\\s")[1]);
-                        if (index < 1 || index > 100 ) {
-                            output.writeUTF("ERROR");
-                        } else {
-                            List<database> results = deserializer();
-                            boolean isId = false;
-                            for (database object : results
-                            ) {
-                                if (object.getIndex() == index - 1) {
-                                    isId = true;
-                                    serializer(index - 1, results);
-                                    output.writeUTF("OK");
+/*                                List<database> results = deserializer();
+
+                                boolean isId = false;
+                                for (database object : results
+                                ) {
+                                    if (object.getIndex() == index - 1) {
+                                        isId = true;
+                                        output.writeUTF(object.getText());
+                                    }
                                 }
+                                if(!isId)
+                                {
+                                    output.writeUTF("ERROR");
+                                }*/
                             }
-                            if(!isId)
-                            {
+
+                        } else if (listOfMsg[0].equals("delete")) {
+                            int index = Integer.parseInt(listOfMsg[1]);
+                            if (index < 1 || index > 100 ) {
                                 output.writeUTF("ERROR");
+                            } else {
+                                listOfData[index - 1] = null;
+/*                                List<database> results = deserializer();
+                                for (database object : results
+                                ) {
+                                    if (object.getIndex() == index - 1) {
+                                        serializer(index - 1, results);
+                                    }
+                                }*/
+                                output.writeUTF("OK");
                             }
-                        }
-                    } else if (msg.split("\\s+")[0].equals("set")) {
-                        int index = Integer.parseInt(msg.split("\\s")[1]);
-                        if (index < 1 || index > 100 ) {
-                            output.writeUTF("ERROR");
-                        } else {
-                            database[index - 1] = "";
-                            for (int i = 2; i < listOfMsg.length; i++) {
-                                database[index - 1] += listOfMsg[i] + " ";
+                        } else if (listOfMsg[0].equals("set")) {
+                            int index = Integer.parseInt(listOfMsg[1]);
+                            if (index < 1 || index > 100 ) {
+                                output.writeUTF("ERROR");
+                            } else {
+                                listOfData[index - 1] = "";
+                                for (int i = 2; i < listOfMsg.length; i++) {
+                                    listOfData[index - 1] += listOfMsg[i] + " ";
+                                }
+
+                                output.writeUTF("OK");
+/*                                database[index - 1] = "";
+                                for (int i = 2; i < listOfMsg.length; i++) {
+                                    database[index - 1] += listOfMsg[i] + " ";
+                                }
+
+                                database data = new database();
+                                data.setIndex(Integer.parseInt(listOfMsg[1]) - 1);
+                                data.setText(database[index - 1]);
+
+                                FileOutputStream fileOutputStream
+                                        = new FileOutputStream("data.txt", true);
+                                ObjectOutputStream objectOutputStream
+                                        = new ObjectOutputStream(fileOutputStream);
+                                objectOutputStream.writeObject(data);
+                                objectOutputStream.close();*/
+
                             }
-                            output.writeUTF("OK");
-                            database data = new database();
-                            data.setIndex(Integer.parseInt(listOfMsg[1]) - 1);
-                            data.setText(database[index - 1]);
-
-                            FileOutputStream fileOutputStream
-                                    = new FileOutputStream("data.txt", true);
-                            ObjectOutputStream objectOutputStream
-                                    = new ObjectOutputStream(fileOutputStream);
-                            objectOutputStream.writeObject(data);
-                            objectOutputStream.close();
-
                         }
                     }
+
                 }
             }
         } catch (IOException e) {

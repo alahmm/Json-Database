@@ -18,13 +18,18 @@ public class Main{
         ) {
             Scanner scanner = new Scanner(System.in);
             scanner.useDelimiter("\\n");
-            String option = scanner.next();
-            if (option.equals("exit")) {
-                output.writeUTF(option);
-            } else {
-                output.writeUTF(option);
-                System.out.println(input.readUTF());
+            String option;
+            while(true) {
+                option = scanner.next();
+                if (option.equals("exit")) {
+                    output.writeUTF(option);
+                    return;
+                } else {
+                    output.writeUTF(option);
+                    System.out.println(input.readUTF());
+                }
             }
+
 
         } catch (IOException e) {
             e.printStackTrace();
