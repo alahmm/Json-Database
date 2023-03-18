@@ -20,12 +20,8 @@ public class Main{
             Scanner scanner = new Scanner(System.in);
             scanner.useDelimiter("\\n");
             String option = scanner.next();
-            if (option.equals("exit")) {
-                output.writeUTF(option);
-            } else {
-                output.writeUTF(option);
-                System.out.println(input.readUTF());
-            }
+            output.writeUTF(option);
+            System.out.println("Received: " +input.readUTF());
 
         } catch (IOException e) {
             e.printStackTrace();
