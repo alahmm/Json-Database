@@ -18,9 +18,15 @@ class Main {
                 Arrays.asList("Metallica",
                         "Children of Bodom",
                         "The Rolling Stones", "Rammstein"));
-
+        /**
+         * serialization
+         */
         String espGuitarJson = new Gson().toJson(espGuitar);
         System.out.println(espGuitarJson);
+        /**
+         * deserialization
+         */
+        GuitarBrand espGuitarBack = new Gson().fromJson(espGuitarJson, GuitarBrand.class);
     }
 }
 public class GuitarBrand {
