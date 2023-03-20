@@ -1,26 +1,53 @@
 package server;
 
-import java.io.Serializable;
 
-public class database implements Serializable {
+public class database {
+    private String type;
 
-    private String text;
+    private String key;
 
-    private int index;
+    private String response;
+    private String value;
 
-    public String getText() {
-        return text;
+    private String reason;
+
+    public String getKey() {
+        return key;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public String getType() {
+        return type;
     }
 
-    public int getIndex() {
-        return index;
+    public String getValue() {
+        return value;
     }
 
-    public void setIndex(int index) {
-        this.index = index;
+    public String getResponse() {
+        return response;
     }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
+    public void setResponse(String response) {
+        this.response = response;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+    public String getReason() {
+        return reason;
+    }
+
 }

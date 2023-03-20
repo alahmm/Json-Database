@@ -1,42 +1,56 @@
 package client;
 
+import com.google.gson.Gson;
+import server.database;
+
 import java.io.*;
 import java.net.Socket;
-/*import com.beust.jcommander.JCommander;
-import com.beust.jcommander.Parameter;*/
+import java.util.Scanner;
+
 
 public class Main{
 
     private static final String SERVER_ADDRESS = "127.0.0.1";//you can also set adress of other computer if the server is in another machine
-    private static final int SERVER_PORT = 34522;
+    private static final int SERVER_PORT = 34523;
     public static void main(String[] args) {
         System.out.println("Client started!");
-
         try (
                 Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
                 DataInputStream input = new DataInputStream(socket.getInputStream());
                 DataOutputStream output  = new DataOutputStream(socket.getOutputStream())
         ) {
-            if (args[1].equals("exit")) {
-                output.writeUTF("exit");
-                System.out.println("Sent: exit");
-                System.out.printf("%nReceived: %s%n", input.readUTF());
+            Scanner scanner = new Scanner(System.in);
+            scanner.useDelimiter("\\n");
+            String msg = scanner.next();
+            String[] listOfMsg = msg.split("\\s");
+            if (listOfMsg[0].equals("exit")) {
+                database data = new database();
+                data.setType(listOfMsg[0]);
+                String dataJson = new Gson().toJson(data);
+                output.writeUTF(dataJson);
+                System.out.println("Sent: "+ dataJson);
+                String answer = input.readUTF();
+                System.out.printf("%nReceived: %s%n", answer);
 
-            } else if (args[1].equals("get") || args[1].equals("delete")) {
-                output.writeUTF(args[1]);
-                output.writeUTF(args[3]);
-                System.out.printf("%nSent: %s %s", args[1], args[3]);
-
-                System.out.printf("%nReceived: %s%n", input.readUTF());
+            } else if (listOfMsg[0].equals("get") || listOfMsg[0].equals("delete")) {
+                database data = new database();
+                data.setType(listOfMsg[0]);
+                data.setKey(listOfMsg[1]);
+                String dataJson = new Gson().toJson(data);
+                output.writeUTF(dataJson);
+                System.out.println("Sent: "+ dataJson);
+                String answer = input.readUTF();
+                System.out.printf("%nReceived: %s%n", answer);
             } else {
-                output.writeUTF(args[1]);
-                output.writeUTF(args[3]);
-                output.writeUTF(args[5]);
-
-                System.out.printf("Sent: %s %s %s", args[1], args[3], args[5]);
-
-
-                System.out.printf("%nReceived: %s%n", input.readUTF());
+                database data = new database();
+                data.setType(listOfMsg[0]);
+                data.setKey(listOfMsg[1]);
+                data.setValue(listOfMsg[2]);
+                String dataJson = new Gson().toJson(data);
+                output.writeUTF(dataJson);
+                System.out.println("Sent: "+ dataJson);
+                String answer = input.readUTF();
+                System.out.printf("%nReceived: %s%n", answer);
             }
 
         } catch (IOException e) {
