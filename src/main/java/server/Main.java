@@ -1,9 +1,6 @@
 package server;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import json.GuitarBrand;
 
 import java.io.*;
 import java.net.InetAddress;
@@ -14,6 +11,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class Main {
+    static String dirPath = "C:\\Users\\alahmm\\IdeaProjects\\JSON Database\\src\\main\\java\\server\\data\\db.json";
+    String dirPathToImportFrom = System.getProperty("user.dir") + File.separator + "src" + File.separator + "client" + File.separator + "data";
     private static final String address = "127.0.0.1";
     private static final int port = 34523;
     static class Session extends Thread {
@@ -47,6 +46,7 @@ public class Main {
                     String key = data.getKey();
                     //JsonElement element = jsonObject.get(key);
                     boolean isThere = false;
+
                     if (jsonObjectList.size() >= 1) {
                         for (JsonObject jsonObject : jsonObjectList
                         ) {
@@ -81,6 +81,12 @@ public class Main {
                             String keyNew = dataNew.getKey();
                             if (Objects.equals(keyNew, key)) {
                                 jsonObjectList.remove(jsonObject);
+
+                                File file = new File(dirPath);
+                                try (FileWriter fileWriter = new FileWriter(file, false)) {
+                                    fileWriter.write(String.valueOf(jsonObjectList));
+
+                                }
                                 isThere = true;
                                 database out = new database();
                                 out.setResponse("OK");
@@ -113,6 +119,11 @@ public class Main {
                                 jsonObject.addProperty("key", key);
                                 jsonObject.addProperty("value", value);
                                 jsonObjectList.set(index, jsonObject);
+                                File file = new File(dirPath);
+                                try (FileWriter fileWriter = new FileWriter(file, false)) {
+                                    fileWriter.write(String.valueOf(jsonObjectList));
+
+                                }
                             }
                         }
                     }
@@ -121,6 +132,13 @@ public class Main {
                         jsonObject.addProperty("key", key);
                         jsonObject.addProperty("value", value);
                         jsonObjectList.add(jsonObject);
+
+                        File file = new File(dirPath);
+                        try (FileWriter fileWriter = new FileWriter(file, false)) {
+                            fileWriter.write(String.valueOf(jsonObjectList));
+
+                        }
+
                     }
                     database out = new database();
                     out.setResponse("OK");
