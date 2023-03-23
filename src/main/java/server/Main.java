@@ -1,6 +1,5 @@
 package server;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 
 import java.io.*;
 import java.net.InetAddress;
@@ -43,15 +42,13 @@ public class Main {
                     serverSocket.close();
                 } else if (msg.contains("get")) {
                     database data = new Gson().fromJson(msg, database.class);
-                    String key = data.getKey();
-                    //JsonElement element = jsonObject.get(key);
+                    JsonArray key = data.getKey();
                     boolean isThere = false;
-
                     if (jsonObjectList.size() >= 1) {
                         for (JsonObject jsonObject : jsonObjectList
                         ) {
                             database dataNew = new Gson().fromJson(jsonObject, database.class);
-                            String keyNew = dataNew.getKey();
+                            JsonArray keyNew = dataNew.getKey();
                             if (Objects.equals(keyNew, key)) {
                                 isThere = true;
                                 database out = new database();
@@ -72,13 +69,13 @@ public class Main {
 
                 } else if (msg.contains("delete")) {
                     database data = new Gson().fromJson(msg, database.class);
-                    String key = data.getKey();
+                    JsonArray key = data.getKey();
                     boolean isThere = false;
                     if (jsonObjectList.size() >= 1) {
                         for (JsonObject jsonObject : jsonObjectList
                         ) {
                             database dataNew = new Gson().fromJson(jsonObject, database.class);
-                            String keyNew = dataNew.getKey();
+                            JsonArray keyNew = dataNew.getKey();
                             if (Objects.equals(keyNew, key)) {
                                 jsonObjectList.remove(jsonObject);
 
@@ -105,19 +102,19 @@ public class Main {
 
                 } else if (msg.contains("set")) {
                     database data = new Gson().fromJson(msg, database.class);
-                    String key = data.getKey();
-                    String value = data.getValue();
+                    JsonArray key = data.getKey();
+                    JsonObject value = data.getValue();
                     boolean isthere = false;
                     if (jsonObjectList.size() >= 1) {
                         for (JsonObject jsonObject : jsonObjectList
                         ) {
                             database dataNew = new Gson().fromJson(jsonObject, database.class);
-                            String keyNew = dataNew.getKey();
+                            JsonArray keyNew = dataNew.getKey();
                             if (Objects.equals(keyNew, key)) {
                                 isthere = true;
                                 int index = jsonObjectList.indexOf(jsonObject);
-                                jsonObject.addProperty("key", key);
-                                jsonObject.addProperty("value", value);
+                                jsonObject.add("key", key);
+                                jsonObject.add("value", value);
                                 jsonObjectList.set(index, jsonObject);
                                 File file = new File(dirPath);
                                 try (FileWriter fileWriter = new FileWriter(file, false)) {
@@ -129,8 +126,8 @@ public class Main {
                     }
                     if (!isthere) {
                         JsonObject jsonObject = new JsonObject();
-                        jsonObject.addProperty("key", key);
-                        jsonObject.addProperty("value", value);
+                        jsonObject.add("key", key);
+                        jsonObject.add("value", value);
                         jsonObjectList.add(jsonObject);
 
                         File file = new File(dirPath);

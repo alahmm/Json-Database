@@ -1,17 +1,21 @@
 package server;
 
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
+import java.util.List;
+
 public class database {
     private String type;
 
-    private String key;
-
+    private JsonArray key;
     private String response;
-    private String value;
+    private JsonObject value;
 
     private String reason;
 
-    public String getKey() {
+    public JsonArray getKey() {
         return key;
     }
 
@@ -19,7 +23,7 @@ public class database {
         return type;
     }
 
-    public String getValue() {
+    public JsonObject getValue() {
         return value;
     }
 
@@ -35,7 +39,7 @@ public class database {
         this.response = response;
     }
 
-    public void setKey(String key) {
+    public void setKey(JsonArray key) {
         this.key = key;
     }
 
@@ -43,7 +47,7 @@ public class database {
         this.type = type;
     }
 
-    public void setValue(String value) {
+    public void setValue(JsonObject value) {
         this.value = value;
     }
     public String getReason() {

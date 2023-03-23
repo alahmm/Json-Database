@@ -38,20 +38,20 @@ public class Main{
                 System.out.printf("%nReceived: %s%n", answer);
 
             } else if (listOfMsg[0].equals("get") || listOfMsg[0].equals("delete")) {
-                database data = new database();
+/*                database data = new database();
                 data.setType(listOfMsg[0]);
                 data.setKey(listOfMsg[1]);
                 String dataJson = new Gson().toJson(data);
                 output.writeUTF(dataJson);
                 System.out.println("Sent: "+ dataJson);
                 String answer = input.readUTF();
-                System.out.printf("%nReceived: %s%n", answer);
+                System.out.printf("%nReceived: %s%n", answer);*/
             } else if (listOfMsg[0].equals("-in")) {
                 String filename = listOfMsg[1];
                 Scanner scannerNew = new Scanner(new File((dirPathToImportFrom + filename)));
                 String fileContent = "";
                 while (scannerNew.hasNext()) {
-                     fileContent = scannerNew.nextLine();
+                     fileContent += scannerNew.nextLine();
                 }
                 scannerNew.close();
                 output.writeUTF(fileContent);
@@ -60,7 +60,7 @@ public class Main{
                 System.out.printf("%nReceived: %s%n", answer);
 
             } else {
-                database data = new database();
+/*                database data = new database();
                 data.setType(listOfMsg[0]);
                 data.setKey(listOfMsg[1]);
                 data.setValue(listOfMsg[2]);
@@ -68,7 +68,7 @@ public class Main{
                 output.writeUTF(dataJson);
                 System.out.println("Sent: "+ dataJson);
                 String answer = input.readUTF();
-                System.out.printf("%nReceived: %s%n", answer);
+                System.out.printf("%nReceived: %s%n", answer);*/
             }
 
         } catch (IOException e) {
