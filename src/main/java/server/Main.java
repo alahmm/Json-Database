@@ -42,13 +42,17 @@ public class Main {
                     serverSocket.close();
                 } else if (msg.contains("get")) {
                     database data = new Gson().fromJson(msg, database.class);
-                    JsonArray key = data.getKey();
+                    //String key = data.getKey();
+                    //JsonElement element = jsonObject.get(key);
                     boolean isThere = false;
-                    if (jsonObjectList.size() >= 1) {
+                    database dataNew = new Gson().fromJson(new FileReader(dirPath), database.class);
+                    JsonObject jsonObject = new JsonParser().parse(new FileReader(dirPath)).getAsJsonObject();
+                    database datad = new Gson().fromJson(jsonObject, database.class);
+/*                    if (jsonObjectList.size() >= 1) {
                         for (JsonObject jsonObject : jsonObjectList
                         ) {
                             database dataNew = new Gson().fromJson(jsonObject, database.class);
-                            JsonArray keyNew = dataNew.getKey();
+                            String keyNew = dataNew.getKey();
                             if (Objects.equals(keyNew, key)) {
                                 isThere = true;
                                 database out = new database();
@@ -65,17 +69,17 @@ public class Main {
                         out.setReason("No such key");
                         String dataJson = new Gson().toJson(out);
                         output.writeUTF(dataJson);
-                    }
+                    }*/
 
                 } else if (msg.contains("delete")) {
                     database data = new Gson().fromJson(msg, database.class);
-                    JsonArray key = data.getKey();
+                    String key = data.getKey();
                     boolean isThere = false;
                     if (jsonObjectList.size() >= 1) {
                         for (JsonObject jsonObject : jsonObjectList
                         ) {
                             database dataNew = new Gson().fromJson(jsonObject, database.class);
-                            JsonArray keyNew = dataNew.getKey();
+                            String keyNew = dataNew.getKey();
                             if (Objects.equals(keyNew, key)) {
                                 jsonObjectList.remove(jsonObject);
 
@@ -102,19 +106,20 @@ public class Main {
 
                 } else if (msg.contains("set")) {
                     database data = new Gson().fromJson(msg, database.class);
-                    JsonArray key = data.getKey();
+                    String key = data.getKey();
                     JsonObject value = data.getValue();
                     boolean isthere = false;
                     if (jsonObjectList.size() >= 1) {
                         for (JsonObject jsonObject : jsonObjectList
                         ) {
                             database dataNew = new Gson().fromJson(jsonObject, database.class);
-                            JsonArray keyNew = dataNew.getKey();
+                            String keyNew = dataNew.getKey();
                             if (Objects.equals(keyNew, key)) {
                                 isthere = true;
                                 int index = jsonObjectList.indexOf(jsonObject);
-                                jsonObject.add("key", key);
+                                jsonObject.addProperty("key", key);
                                 jsonObject.add("value", value);
+
                                 jsonObjectList.set(index, jsonObject);
                                 File file = new File(dirPath);
                                 try (FileWriter fileWriter = new FileWriter(file, false)) {
@@ -126,7 +131,7 @@ public class Main {
                     }
                     if (!isthere) {
                         JsonObject jsonObject = new JsonObject();
-                        jsonObject.add("key", key);
+                        jsonObject.addProperty("key", key);
                         jsonObject.add("value", value);
                         jsonObjectList.add(jsonObject);
 
