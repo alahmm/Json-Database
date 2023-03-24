@@ -1,8 +1,10 @@
 package client;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import server.database;
+import server.databaseFromCL;
 
 import java.io.*;
 import java.net.Socket;
@@ -38,16 +40,19 @@ public class Main{
                 System.out.printf("%nReceived: %s%n", answer);
 
             } else if (listOfMsg[0].equals("get") || listOfMsg[0].equals("delete")) {
-/*                database data = new database();
+                output.writeUTF("commandLine");
+               database data = new database();
                 data.setType(listOfMsg[0]);
                 data.setKey(listOfMsg[1]);
                 String dataJson = new Gson().toJson(data);
                 output.writeUTF(dataJson);
                 System.out.println("Sent: "+ dataJson);
                 String answer = input.readUTF();
-                System.out.printf("%nReceived: %s%n", answer);*/
+                System.out.printf("%nReceived: %s%n", answer);
             } else if (listOfMsg[0].equals("-in")) {
+                output.writeUTF("not a command line");
                 String filename = listOfMsg[1];
+                output.writeUTF(filename);
                 Scanner scannerNew = new Scanner(new File((dirPathToImportFrom + filename)));
                 String fileContent = "";
                 while (scannerNew.hasNext()) {
@@ -60,15 +65,17 @@ public class Main{
                 System.out.printf("%nReceived: %s%n", answer);
 
             } else {
-/*                database data = new database();
+                output.writeUTF("commandLine");
+                databaseFromCL  data = new databaseFromCL();
                 data.setType(listOfMsg[0]);
                 data.setKey(listOfMsg[1]);
+
                 data.setValue(listOfMsg[2]);
                 String dataJson = new Gson().toJson(data);
                 output.writeUTF(dataJson);
                 System.out.println("Sent: "+ dataJson);
                 String answer = input.readUTF();
-                System.out.printf("%nReceived: %s%n", answer);*/
+                System.out.printf("%nReceived: %s%n", answer);
             }
 
         } catch (IOException e) {
