@@ -42,23 +42,15 @@ public class Main {
                     if (i < keys.size() - 1) {
                         value = value.getAsJsonObject(list.get(i));
                     } else {
-                        if (keys.get(keys.size() - 1).isJsonObject()) {
-                            value = value.getAsJsonObject(list.get(i));
-                            database out = new database();
-                            out.setResponse("OK");
-                            out.setValue(value);
-                            return new Gson().toJson(out);
-                        } else {
-                            JsonElement jsonElement = value.get(list.get(i));
-                            JsonElementData data = new JsonElementData();
-                            data.setResponse("OK");
-                            data.setValue(jsonElement);
-                            String result =new Gson().toJson(data);
-                            return result;
+                        JsonElement jsonElement = value.get(list.get(i));
+                        JsonElementData data = new JsonElementData();
+                        data.setResponse("OK");
+                        data.setValue(jsonElement);
+                        String result =new Gson().toJson(data);
+                        return result;
                         }
                     }
                 }
-            }
             return "0";
         }
         public static String parserToDelete (JsonArray keys) throws FileNotFoundException {
